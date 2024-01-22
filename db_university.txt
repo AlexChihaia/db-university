@@ -23,10 +23,25 @@ SELECT
 FROM
     `students`
 WHERE
-    `date_of_birth` < '1984-01-22'
+    `date_of_birth` < '1994-01-22'
+
+    //alternativa più performante
+
+
+  SELECT
+    `id`,
+    `name`,
+    `surname`,
+    `date_of_birth`,
+    TIMESTAMPDIFF(YEAR, `date_of_birth`, CURDATE()) AS `age`
+FROM
+    `students`
+WHERE
+    TIMESTAMPDIFF(YEAR, `date_of_birth`, CURDATE()) >= 30
 
 4. Selezionare tutti i corsi del primo semestre del primo anno di un qualsiasi corso di
 laurea (286)
+
 
 SELECT
     *
