@@ -1,11 +1,59 @@
 1. Selezionare tutti gli studenti iscritti al Corso di Laurea in Economia
+
+SELECT
+    *
+FROM
+    `students`
+RIGHT JOIN `degrees` ON `students`.`degree_id` = `degrees`.`id`
+WHERE
+    `degrees`.`name` = "Corso di Laurea in Economia"
+ORDER BY
+    `students`.`surname`,
+    `students`.`name`;
+
 2. Selezionare tutti i Corsi di Laurea Magistrale del Dipartimento di
 Neuroscienze
+
+SELECT
+    *
+FROM
+    `degrees`
+RIGHT JOIN `departments` ON `degrees`.`department_id` = `departments`.`id`
+WHERE
+    `degrees`.`level` = "Magistrale" AND `departments`.`name` = "Dipartimento di Neuroscienze"
+
 3. Selezionare tutti i corsi in cui insegna Fulvio Amato (id=44)
+
+SELECT
+    *
+FROM
+    `courses`
+RIGHT JOIN `course_teacher` ON `courses`.`id` = `course_teacher`.`course_id`
+WHERE
+    `course_teacher`.`teacher_id` = 44
+
 4. Selezionare tutti gli studenti con i dati relativi al corso di laurea a cui
-sono iscritti e il relativo dipartimento, in ordine alfabetico per cognome e
-nome
+sono iscritti
+
+SELECT
+    *
+FROM
+    `students`
+RIGHT JOIN `degrees` ON `students`.`degree_id` = `degrees`.`id`
+RIGHT JOIN `departments` ON `degrees`.`department_id` = `departments`.`id`
+
 5. Selezionare tutti i corsi di laurea con i relativi corsi e insegnanti
+
+SELECT
+    *
+FROM
+    `degrees`
+INNER JOIN `courses` ON `degrees`.`id` = `courses`.`degree_id`
+INNER JOIN `teachers` ON `degrees`.`id` = `teachers`.`id`
+ORDER BY
+    `degrees`.`id`,
+    `courses`.`id`;
+
 6. Selezionare tutti i docenti che insegnano nel Dipartimento di
 Matematica (54)
 7. BONUS: Selezionare per ogni studente il numero di tentativi sostenuti
@@ -16,12 +64,82 @@ filtrare i tentativi con voto minimo 18.
 #BONUS 
 
 1. Selezionare tutti i corsi del Corso di Laurea in Informatica (22)
+
+SELECT
+    `degrees`.`id` AS `degree_id`,
+    `degrees`.`name` AS `degree_name`,
+    `courses`.`id` AS `course_id`,
+    `courses`.`name` AS `course_name`,
+    `year`
+FROM
+    `degrees`
+RIGHT JOIN `courses` ON `degrees`.`id` = `courses`.`degree_id`
+WHERE
+    `degrees`.`name` = "Corso di Laurea in Informatica";
+
+
 2. Selezionare le informazioni sul corso con id = 144, con tutti i relativi appelli d’esame
+
+SELECT
+    *
+FROM
+    `courses`
+RIGHT JOIN `exams` ON `courses`.`id` = `exams`.`course_id`
+WHERE
+    `courses`.`id` = 144;
+
 3. Selezionare a quale dipartimento appartiene il Corso di Laurea in Diritto
 dell'Economia (Dipartimento di Scienze politiche, giuridiche e studi internazionali)
+
+SELECT
+    `departments`.*
+FROM
+    `degrees`
+RIGHT JOIN `departments` ON `departments`.`id` = `degrees`.`department_id`
+WHERE
+    `degrees`.`name` = "Corso di Laurea in Diritto dell'Economia";
+
 4. Selezionare tutti gli appelli d'esame del Corso di Laurea Magistrale in Fisica del
 primo anno
+
+SELECT
+    `exams`.*
+FROM
+    `exams`
+INNER JOIN `courses` ON `exams`.`course_id` = `courses`.`id`
+INNER JOIN `degrees` ON `courses`.`degree_id` = `degrees`.`id`
+WHERE
+    `degrees`.`name` = "Corso di Laurea Magistrale in Fisica"
+AND
+	`courses`.`year` = 1;
+
 5. Selezionare tutti i docenti che insegnano nel Corso di Laurea in Lettere (21)
+
+SELECT DISTINCT
+    `teachers`.*
+FROM
+    `degrees`
+INNER JOIN `courses` ON `degrees`.`id` = `courses`.`degree_id`
+INNER JOIN `course_teacher` ON `course_teacher`.`course_id` = `courses`.id
+INNER JOIN `teachers` ON `course_teacher`.`teacher_id` = `teachers`.id
+WHERE
+    `degrees`.`name` = "Corso di Laurea in Lettere";
+
 6. Selezionare il libretto universitario di Mirco Messina (matricola n. 620320)
+
+SELECT
+    `students`.`surname`,
+    `students`.`name`,
+    `students`.`registration_number`,
+    `students`.`enrolment_date`,
+    `students`.`fiscal_code`,
+    `students`.`date_of_birth`,
+    `degrees`.`name` AS `degree_name`
+FROM
+    `students`
+INNER JOIN `degrees` ON `students`.`degree_id` = `degrees`.`id`
+WHERE
+    `students`.`name` = "Mirco" AND `students`.`surname` = "Messina";
+
 7. Selezionare il voto medio di superamento d'esame per ogni corso, con anche i dati
 del corso di laurea associato, ordinati per media voto decrescente
